@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
-import Root from './root';
+import ReactDom from 'react-dom';
+import {Todo} from './app'
 
-ReactDOM.render(
-	<Root/>,
+ReactDom.render(
+	<Todo/>,
 	document.getElementById('app')
-);
-
+)
