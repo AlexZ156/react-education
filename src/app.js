@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import Item from './item';
+import Filter from './filter';
 import eventEmmiter from 'events';
 
 class MyEmitter extends eventEmmiter {};
@@ -21,7 +22,23 @@ class Todo extends Component {
 		]
 	}
 
-	add(text) {
+	filterNames = [
+		{
+			id: 'All',
+			name: 'All'
+		},
+		{
+			id: 'COMPLETED',
+			name: 'Completed'
+		},
+		{
+			id: 'NCOMPLETED',
+			name: 'Not Completed'
+		}
+	]
+
+	add(text, e) {
+		if (e && e.keyCode !== 13 || !text.trim().length) return;
 		this.setState({
 			items: [
 				{
@@ -44,7 +61,7 @@ class Todo extends Component {
 						completed: id === item.id ? !item.completed : item.completed
 					}
 				})
-			})
+			});
 		});
 
 		EE.on('remove', (id) => {
@@ -52,20 +69,36 @@ class Todo extends Component {
 				items: this.state.items.filter(item => {
 					return item.id !== id;
 				})
-			})
+			});
+		});
+
+		EE.on('filter', (filter) => {
+			this.setState({
+				filter
+			});
 		});
 	}
 
 	render() {
 		return (
 			<div>
-				<input type="text" ref={input => this.input = input}/>
+				<input type="text" ref={input => this.input = input} onKeyDown={(e) => this.add(this.input.value, e)}/>
 				<button onClick={() => this.add(this.input.value)}>add</button>
 				<ul>
 					{this.state.items.map((item, index) => (
 						<Item key={index} data={item}/>
-					))}
+					)).filter(item => {
+						switch (this.state.filter) {
+							case 'COMPLETED':
+								return item.props.data.completed;
+							case 'NCOMPLETED':
+								return !item.props.data.completed;
+							default:
+								return true;
+						}
+					})}
 				</ul>
+				<Filter filter={this.state.filter} names={this.filterNames}/>
 			</div>
 		)
 	}
