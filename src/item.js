@@ -1,28 +1,23 @@
 import React, {Component} from 'react';
 import {EE} from './app';
 
-class Item extends Component {
-	toggle(item) {
+export const Item = props => {
+	const toggle = (item) => {
 		EE.emit('toggle', item.id);
-	}
+	};
 
-	remove(item) {
+	const remove = (item) => {
 		EE.emit('remove', item.id);
-	}
+	};
 
-	render() {
-		return(
-			<li className={this.props.data.completed ? 'completed' : ''}>
-
-				<span
-					onClick={() => {this.toggle(this.props.data)}}
-				>
-					{this.props.data.text}
-				</span>
-				<button onClick={() => {this.remove(this.props.data)}}>Remove</button>
-			</li>
-		)
-	}
+	return (
+		<li className={props.data.completed ? 'completed' : ''}>
+			<span
+				onClick={() => {toggle(props.data)}}
+			>
+				{props.data.text}
+			</span>
+			<button onClick={() => {remove(props.data)}}>Remove</button>
+		</li>
+	)
 };
-
-export default Item;

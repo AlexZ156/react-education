@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import Item from './item';
-import Filter from './filter';
+import {Item} from './item';
+import {Filter} from './filter';
 import eventEmmiter from 'events';
 
 class MyEmitter extends eventEmmiter {};
@@ -8,19 +8,8 @@ const EE = new MyEmitter();
 
 class Todo extends Component {
 	state = {
-		items: [
-			{
-				text: 'first',
-				completed: false,
-				id: 'id-123'
-			},
-			{
-				text: 'second',
-				completed: true,
-				id: 'id-321'
-			}
-		]
-	}
+		items: []
+	};
 
 	filterNames = [
 		{
@@ -35,9 +24,23 @@ class Todo extends Component {
 			id: 'NCOMPLETED',
 			name: 'Not Completed'
 		}
-	]
+	];
 
-	add(text, e) {
+	componentDidMount() {
+		EE.on('toggle', (id) => {
+			this.toggleItem(id);
+		});
+
+		EE.on('remove', (id) => {
+			this.removeItem(id);
+		});
+
+		EE.on('filter', (filter) => {
+			this.doFilter(filter);
+		});
+	}
+
+	addItem(text, e) {
 		if (e && e.keyCode !== 13 || !text.trim().length) return;
 		this.setState({
 			items: [
@@ -52,51 +55,47 @@ class Todo extends Component {
 		this.input.focus();
 	}
 
-	componentDidMount() {
-		EE.on('toggle', (id) => {
-			this.setState({
-				items: this.state.items.map(item => {
-					return {
-						...item,
-						completed: id === item.id ? !item.completed : item.completed
-					}
-				})
-			});
+	toggleItem(id) {
+		this.setState({
+			items: this.state.items.map(item => {
+				return {
+					...item,
+					completed: id === item.id ? !item.completed : item.completed
+				}
+			})
 		});
+	}
 
-		EE.on('remove', (id) => {
-			this.setState({
-				items: this.state.items.filter(item => {
-					return item.id !== id;
-				})
-			});
+	removeItem(id) {
+		this.setState({
+			items: this.state.items.filter(item => {
+				return item.id !== id;
+			})
 		});
+	}
 
-		EE.on('filter', (filter) => {
-			this.setState({
-				filter
-			});
-		});
+	doFilter(filter) {
+		this.setState({filter});
 	}
 
 	render() {
 		return (
 			<div>
-				<input type="text" ref={input => this.input = input} onKeyDown={(e) => this.add(this.input.value, e)}/>
-				<button onClick={() => this.add(this.input.value)}>add</button>
+				<input type="text" ref={input => this.input = input} onKeyDown={(e) => this.addItem(this.input.value, e)}/>
+				<button onClick={() => this.addItem(this.input.value)}>add</button>
 				<ul>
-					{this.state.items.map((item, index) => (
-						<Item key={index} data={item}/>
-					)).filter(item => {
+					{this.state.items.filter(item => {
 						switch (this.state.filter) {
 							case 'COMPLETED':
-								return item.props.data.completed;
+								return item.completed;
 							case 'NCOMPLETED':
-								return !item.props.data.completed;
+								return !item.completed;
 							default:
 								return true;
 						}
-					})}
+					}).map((item, index) => (
+						<Item key={index} data={item}/>
+					))}
 				</ul>
 				<Filter filter={this.state.filter} names={this.filterNames}/>
 			</div>
