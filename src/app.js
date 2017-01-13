@@ -1,15 +1,27 @@
 import React, {Component} from 'react';
-import {Item} from './item';
-import {Filter} from './filter';
-import eventEmmiter from 'events';
+import {connect} from 'react-redux';
+import List from './components/list';
+import Filter from './components/filter';
 
-class MyEmitter extends eventEmmiter {};
-const EE = new MyEmitter();
+const stateToProps = ({items}) => {
+    return {
+        items
+    };
+};
+
+const dispatchToProps = (dispatch) => {
+    return {
+        itemAdd(id) {
+             dispatch({
+                type: 'ADDITEM',
+                text
+            })
+        }
+    }
+};
 
 class Todo extends Component {
-	state = {
-		items: []
-	};
+	state = store.getState();
 
 	filterNames = [
 		{
@@ -27,34 +39,21 @@ class Todo extends Component {
 	];
 
 	componentDidMount() {
-		EE.on('toggle', (id) => {
-			this.toggleItem(id);
-		});
-
-		EE.on('remove', (id) => {
-			this.removeItem(id);
-		});
-
-		EE.on('filter', (filter) => {
-			this.doFilter(filter);
+		store.subscribe(() => {
+			this.setState(store.getState());
 		});
 	}
 
 	addItem(text, e) {
 		if (e && e.keyCode !== 13 || !text.trim().length) return;
-		this.setState({
-			items: [
-				{
-					text,
-					id: `id-${Date.now()}`
-				},
-				...this.state.items
-			]
+		dispatch({
+			type: 'ADDITEM',
+			text
 		});
 		this.input.value = '';
 		this.input.focus();
 	}
-
+/*
 	toggleItem(id) {
 		this.setState({
 			items: this.state.items.map(item => {
@@ -76,31 +75,18 @@ class Todo extends Component {
 
 	doFilter(filter) {
 		this.setState({filter});
-	}
+	}*/
 
 	render() {
 		return (
 			<div>
 				<input type="text" ref={input => this.input = input} onKeyDown={(e) => this.addItem(this.input.value, e)}/>
 				<button onClick={() => this.addItem(this.input.value)}>add</button>
-				<ul>
-					{this.state.items.filter(item => {
-						switch (this.state.filter) {
-							case 'COMPLETED':
-								return item.completed;
-							case 'NCOMPLETED':
-								return !item.completed;
-							default:
-								return true;
-						}
-					}).map((item, index) => (
-						<Item key={index} data={item}/>
-					))}
-				</ul>
+				<List/>
 				<Filter filter={this.state.filter} names={this.filterNames}/>
 			</div>
 		)
 	}
 };
 
-export {Todo, EE};
+export connect(stateToProps, dispatchToProps)(Todo);
