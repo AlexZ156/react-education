@@ -1,20 +1,32 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {filterChange} from 'actions';
 
 const stateToProps = ({filter}) => ({filter});
 
 const dispatchToProps = dispatch => {
     return {
-        doFilter(filter) {
-            dispatch({
-                type: 'FILTER_CHANGE',
-                filter
-            })
-        } 
+        filterChange(filter) {
+            dispatch(filterChange(filter))
+        }
     };
 };
 
-const Filter = ({filter, doFilter, names}) => {
+const Filter = ({filter, filterChange}) => {
+    const filterNames = [
+        {
+            id: 'All',
+            name: 'All'
+        },
+        {
+            id: 'COMPLETED',
+            name: 'Completed'
+        },
+        {
+            id: 'NCOMPLETED',
+            name: 'Not Completed'
+        }
+    ];
      const setDisabled = (filterId) => {
         try {
             return filter.toUpperCase() === filterId.toUpperCase() ? {disabled: 'disabled'} : {};
@@ -25,9 +37,14 @@ const Filter = ({filter, doFilter, names}) => {
 
     return(
         <ul>
-            {names.map((obj, index) => (
+            {filterNames.map((obj, index) => (
                 <li key={index}>
-                    <button {...setDisabled(obj.id)} onClick={() => doFilter(obj.id)}>{obj.name}</button>
+                    <button
+                        {...setDisabled(obj.id)}
+                        onClick={() => filterChange(obj.id)}
+                    >
+                        {obj.name}
+                    </button>
                 </li>
             ))}
         </ul>

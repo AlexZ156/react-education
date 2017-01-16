@@ -1,8 +1,13 @@
 'use strict';
+import {
+    ITEM_REMOVE,
+    ITEM_TOGGLE,
+    ITEM_ADD
+} from './../actions';
 
 export default (state = [], action) => {
     switch(action.type) {
-        case 'ADDITEM':
+        case ITEM_ADD:
             return [
                 ...state,
                 {
@@ -10,9 +15,9 @@ export default (state = [], action) => {
                     id: `id-${Date.now()}`
                 }
             ];
-        case 'REMOVEITEM':
+        case ITEM_REMOVE:
             return state.filter(item => item.id !== action.id);
-        case 'TOGGLEITEM':
+        case ITEM_TOGGLE:
             return state.map(item => {
                 return {
                     ...item,

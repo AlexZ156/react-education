@@ -41,7 +41,7 @@ module.exports = {
 
 	resolve: {
 		alias: {
-			'actions': path.resolve(__dirname, './src/actions/actions')
+			'actions': path.resolve(__dirname, './src/actions')
 		}
 	}
 };

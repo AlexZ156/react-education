@@ -6,7 +6,6 @@ import Todo from './app';
 import reducers from './reducers';
 
 const store = createStore(combineReducers(reducers));
-const {dispatch} = store;
 
 ReactDom.render(
     <Provider store={store}>

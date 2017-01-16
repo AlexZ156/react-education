@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {itemRemove, itemToggle} from 'actions';
 
 const stateToProps = ({items, filter}) => {
     return {
@@ -11,17 +12,11 @@ const stateToProps = ({items, filter}) => {
 const dispatchToProps = (dispatch) => {
     return {
         itemRemove(id) {
-             dispatch({
-                type: 'REMOVEITEM',
-                id
-            })
+             dispatch(itemRemove(id))
         },
         itemToggle(id) {
-            dispatch({
-                type: 'TOGGLEITEM',
-                id
-            })
-        } 
+            dispatch(itemToggle(id))
+        }
     }
 };
 
@@ -47,7 +42,7 @@ const List = ({items, filter, itemRemove, itemToggle}) => {
                     <button onClick={() => {itemRemove(item.id)}}>Remove</button>
                 </li>
             ))}
-            
+
         </ul>
     )
 };
