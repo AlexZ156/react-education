@@ -1,15 +1,12 @@
 'user strict';
 
 import React, { Component } from 'react';
-<<<<<<< HEAD
 import { connect } from 'react-redux';
-=======
 import {
   BrowserRouter as Router,
   Route,
   NavLink
 } from 'react-router-dom';
->>>>>>> d6e29faf2b64db9ba1600a7a3474fc004e977f0b
 
 const stateToProps = (...a) => {
     a.forEach(obj => {
@@ -28,9 +25,4 @@ export default connect(stateToProps)(class Admin extends Component {
             </div>
         )
     }
-<<<<<<< HEAD
 });
-
-=======
-}
->>>>>>> d6e29faf2b64db9ba1600a7a3474fc004e977f0b
