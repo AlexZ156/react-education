@@ -23,7 +23,7 @@ const serve = (cb) => (
 			baseDir: './dist/',
 			middleware: [historyApiFallback()]
 		},
-		files: [path.resolve(__dirname, 'dist/**/*.*')]
+		files: [path.resolve(__dirname, 'dist/*.*')]
 	}, cb)
 );
 

@@ -2,6 +2,9 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {selectLink} from 'actions';
+import styles from './style.scss';
+
+console.log('styles == >', styles)
 
 const stateToProps = ({tabset}) => ({
     tabset

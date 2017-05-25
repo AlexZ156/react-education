@@ -14,6 +14,7 @@ import Admin from './components/admin';
 import Genre from './components/genre';
 import Home from './components/home';
 
+
 // Create a history of your choosing (we're using a browser history in this case)
 const history = createHistory()
 
